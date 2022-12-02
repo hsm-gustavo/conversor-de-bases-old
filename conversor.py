@@ -88,7 +88,7 @@ def decimal_para_qualquer(numero,base_destino):
         resultado = str()
 
         while numero>=1:
-            resto = numero%2
+            resto = numero%base_destino
             if resto>=10:
                 resto = converter_numeros(resto)
             resultado+=str(resto)
@@ -124,4 +124,4 @@ if __name__=="__main__":
         while True:
             main()
     except KeyboardInterrupt:
-        print("\nSaindo do aplicativo...")
+        print("\nSaindo do conversor...")
