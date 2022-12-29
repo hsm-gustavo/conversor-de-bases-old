@@ -1,4 +1,9 @@
+from tkinter import *
+import tkinter.messagebox as mbox
 from string import ascii_uppercase
+
+def erro_de_valor():
+    mbox.showerror(title="Erro",message="Valor(es) Inválido(s)")
 
 #convertendo letras para numeros
 def converter_letras(num):
@@ -54,7 +59,7 @@ def decimal_para_qualquer(numero,base_destino):
         inteiro,decimal = numero.split(".")
         primeiro = str()
         segundo = str()
-        
+
         inteiro = int(inteiro)
         decimal = "0."+decimal
         decimal = float(decimal)
@@ -70,7 +75,7 @@ def decimal_para_qualquer(numero,base_destino):
         
         while decimal>0 and digitos<10:
             decimal*=base_destino
-            num = int(decimal)
+            num = int(decimal) 
             if num>=10:
                 segundo+=converter_numeros(num)
             else:
@@ -78,7 +83,7 @@ def decimal_para_qualquer(numero,base_destino):
             decimal-=int(decimal)
             digitos+=1
         
-        resultado=primeiro[::-1]+"."+segundo
+        resultado=primeiro[::-1]+"."+segundo 
         
         return resultado 
 
@@ -108,20 +113,68 @@ def qualquer_pra_qualquer(numero,base_destino,base_origem):
             return numero
         num = qualquer_para_decimal(numero,base_origem)
         return decimal_para_qualquer(num,base_destino)
-    
-    
+
+def temp_text_origem(e):
+    base_origem.delete(0,"end")
+
+def temp_text_num(e):
+    numero.delete(0, "end")
+
+def temp_text_destino(e):
+    base_destino.delete(0, "end")
+
+def convert():
+    try:
+        origem = int( base_origem.get() )
+        num = numero.get()
+        destino = int( base_destino.get() )
+        resultado = qualquer_pra_qualquer(num,destino,origem)
+
+        resultado_texto = Label(text=f"{resultado}",font=("Arial",20,"normal"))
+        resultado_texto.pack()
+
+    except ValueError:
+        erro_de_valor()
 
 def main():
-    base_origem = int(input("Base de origem: "))
-    numero = input("Número a ser convertido: ")
-    base_destino = int(input("Base de destino: "))
-    resultado= qualquer_pra_qualquer(numero,base_destino,base_origem)
+    global base_origem
+    global numero
+    global base_destino
 
-    print(f"Resultado: {resultado}")    
+    window = Tk()
+    width = 300
+    height = 350
+    window.geometry(f"{width}x{height}")
+    window.title(string="Conversor de bases")
+
+    conversor_texto = Label(text="Conversor de Bases",pady=10, font=("Arial",20,"bold"))
+    conversor_texto.pack()
+
+    base_origem_texto = Label(text="Base de origem:")
+    base_origem_texto.pack(side="top")
+    base_origem = Entry(bg="#ffffff",width=10,borderwidth=2)
+    base_origem.insert(index=0,string="Ex.: 2")
+    base_origem.bind("<FocusIn>", temp_text_origem)
+    base_origem.pack(side="top")
+
+    numero_texto = Label(text="Número:")
+    numero_texto.pack(side="top")
+    numero = Entry(bg="#ffffff",width=10,borderwidth=2)
+    numero.insert(index=0,string="Ex.: 1011")
+    numero.bind("<FocusIn>", temp_text_num)
+    numero.pack(side="top")
+
+    base_destino_texto = Label(text="Base de destino:")
+    base_destino_texto.pack(side="top")
+    base_destino = Entry(bg="#ffffff",width=10,borderwidth=2)
+    base_destino.insert(index=0,string="Ex.: 10")
+    base_destino.bind("<FocusIn>", temp_text_destino)
+    base_destino.pack(side="top")
+
+    converter = Button(text="Converter",command=convert)
+    converter.pack()
+    
+    window.mainloop()
 
 if __name__=="__main__":
-    try:
-        while True:
-            main()
-    except KeyboardInterrupt:
-        print("\nSaindo do conversor...")
+    main()
